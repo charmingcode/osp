@@ -8,26 +8,35 @@ var assert = require('assert');
 var HttpApi = require('./gen-nodejs/HttpApi');
 var ttypes = require('./gen-nodejs/httpapi_types.js');
 
-
-//var connection = thrift.createConnection("127.0.0.1", 9090);
-
 var options = {
    transport: thrift.TBufferedTransport,
    protocol: thrift.TBinaryProtocol,
+   http: true,
    path: "/",
    headers: {"Connection": "close"},
    https: false
 };
 
-var connection = thrift.createConnection("127.0.0.1", 9090, options);
+function clientFactory(options){
+    if(options.http){
+        var connection = thrift.createHttpConnection("localhost", 9090, options);
+        connection.on('error', function(err) {
+          assert(false, err);
+        });
+        return thrift.createHttpClient(HttpApi, connection);
 
+    } else {
+        var connection = thrift.createConnection("127.0.0.1", 9090, options);
+        connection.on('error', function(err) {
+          assert(false, err);
+        });
+        // Create a client with the connection
+        return thrift.createClient(HttpApi, connection);
 
-connection.on('error', function(err) {
-  assert(false, err);
-});
+    }
+}
 
-// Create a client with the connection
-var client = thrift.createClient(HttpApi, connection);
+var client = clientFactory(options);
 
 /*
 */
