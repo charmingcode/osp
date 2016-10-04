@@ -30,11 +30,10 @@ index=0
 #osp_libs[index++]="libunwind-0.99-beta.tar.gz"
 #osp_libs[index++]="gperftools-2.1.tar.gz"
 #osp_libs[index++]="bison-3.0.tar.gz"
-#boost depend on  gcc-version, http://www.boost.org/users/history/version_1_54_0.html
-osp_libs[index++]="boost_1_54_0.tar.gz"
+#osp_libs[index++]="boost_1_54_0.tar.gz" #[boost depend on  gcc-version, http://www.boost.org/users/history/version_1_54_0.html]
 #osp_libs[index++]="openssl-1.0.2.tar.gz"
-osp_libs[index++]="thrift-0.9.2.tar.gz"
-#osp_libs[index++]="pcre-8.37.tar.gz"
+#osp_libs[index++]="thrift-0.9.2.tar.gz"
+#osp_libs[index++]="pcre-8.37.tar.gz" #[http://exim.mirror.fr/pcre/pcre-8.37.tar.gz]
 #osp_libs[index++]="memcached-1.4.25.tar.gz"
 #osp_libs[index++]="libmemcache_mozilla_u3.tar.gz"
 #osp_libs[index++]="apr-1.5.2.tar.gz"
