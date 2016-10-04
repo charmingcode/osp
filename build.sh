@@ -21,18 +21,19 @@ PKG_NAME=$VERSION.tar.gz
 
 #************ install configure **************
 index=0
-osp_libs[index++]="zookeeper-3.4.8.tar.gz"
+#osp_libs[index++]="zookeeper-3.4.8.tar.gz"
 #osp_libs[index++]="sigar-master.zip"
 #osp_libs[index++]="jsoncpp-0.10.5.tar.gz"
-#osp_libs[index++]="libevent-2.0.20-stable.tar.bz2"
+#osp_libs[index++]="libevent-2.0.20-stable.tar.gz"
 #osp_libs[index++]="Python-2.7.8.tgz"
 #osp_libs[index++]="protobuf-2.5.0.tar.bz2"
 #osp_libs[index++]="libunwind-0.99-beta.tar.gz"
 #osp_libs[index++]="gperftools-2.1.tar.gz"
 #osp_libs[index++]="bison-3.0.tar.gz"
-#osp_libs[index++]="boost_1_54_0.tar.gz"
+#boost depend on  gcc-version, http://www.boost.org/users/history/version_1_54_0.html
+osp_libs[index++]="boost_1_54_0.tar.gz"
 #osp_libs[index++]="openssl-1.0.2.tar.gz"
-#osp_libs[index++]="thrift-0.9.2.tar.gz"
+osp_libs[index++]="thrift-0.9.2.tar.gz"
 #osp_libs[index++]="pcre-8.37.tar.gz"
 #osp_libs[index++]="memcached-1.4.25.tar.gz"
 #osp_libs[index++]="libmemcache_mozilla_u3.tar.gz"
@@ -57,7 +58,7 @@ function need_install()
 }
 
 # *********** modules **************
-MODULES_SRC_DIR=$TOP_DIR/modules
+MODULES_PKG_DIR=$TOP_DIR/modules
 MODULES_DIST_DIR=$ABSOLUTE_DIST_DIR/modules
 mkdir -p $MODULES_DIST_DIR
 
@@ -67,7 +68,7 @@ pkg_name="sigar-master.zip"
 pkg_dir="sigar-master"
 if need_install "$pkg_name" "${osp_libs[*]}";then
     echo "----- prepare install -----  $pkg_name"
-    cd $MODULES_SRC_DIR
+    cd $MODULES_PKG_DIR
     unzip $pkg_name
     cd $pkg_dir && ./autogen.sh && ./configure --prefix=$MODULES_DIST_DIR && make && make install || exit 255
 fi
@@ -78,21 +79,21 @@ pkg_name="jsoncpp-0.10.5.tar.gz"
 pkg_dir="jsoncpp-0.10.5"
 if need_install "$pkg_name" "${osp_libs[*]}";then
     echo "----- prepare install -----  $pkg_name"
-    cd $MODULES_SRC_DIR
+    cd $MODULES_PKG_DIR
     tar zxvf jsoncpp-0.10.5.tar.gz
     cd $pkg_dir && mkdir -p ./build && cd ./build
-    sed -i "s/unsigned int testNameIndex/unsigned int testNameIndex = 0/g" $MODULES_SRC_DIR/jsoncpp-0.10.5/src/test_lib_json/jsontest.cpp
+    sed -i "s/unsigned int testNameIndex/unsigned int testNameIndex = 0/g" $MODULES_PKG_DIR/jsoncpp-0.10.5/src/test_lib_json/jsontest.cpp
     cmake -DCMAKE_BUILD_TYPE=release -DBUILD_STATIC_LIBS=ON -DBUILD_SHARED_LIBS=ON  -DCMAKE_INSTALL_PREFIX=$MODULES_DIST_DIR -G "Unix Makefiles" ../ && make && make install || exit 255
-    cd $MODULES_SRC_DIR && rm -rf $pkg_dir
+    cd $MODULES_PKG_DIR && rm -rf $pkg_dir
 fi
 
 # pkg - 02
-pkg_name="libevent-2.0.20-stable.tar.bz2"
+pkg_name="libevent-2.0.20-stable.tar.gz"
 pkg_dir="libevent-2.0.20-stable"
 if need_install "$pkg_name" "${osp_libs[*]}";then
     echo "----- prepare install -----  $pkg_name"
-    cd $MODULES_SRC_DIR
-    tar xjvf $pkg_name 
+    cd $MODULES_PKG_DIR
+    tar zxvf $pkg_name 
     cd $pkg_dir
     ./configure --prefix=$MODULES_DIST_DIR && make && make install || exit 255
     #cd .. && rm -rf $pkg_dir
@@ -102,11 +103,11 @@ fi
 pkg_name="Python-2.7.8.tgz"
 pkg_dir="Python-2.7.8"
 if need_install "$pkg_name" "${osp_libs[*]}";then
-    cd $MODULES_SRC_DIR
+    cd $MODULES_PKG_DIR
     tar zxvf $pkg_name
     cd $pkg_dir
     ./configure --prefix=$MODULES_DIST_DIR -enable-shared && make && make install || exit 255
-    cd $MODULES_SRC_DIR && rm -rf $pkg_dir
+    cd $MODULES_PKG_DIR && rm -rf $pkg_dir
 fi
 
 # pkg - 03
@@ -114,7 +115,7 @@ pkg_name="protobuf-2.5.0.tar.bz2"
 pkg_dir="protobuf-2.5.0"
 if need_install "$pkg_name" "${osp_libs[*]}";then
     echo "----- prepare install -----  $pkg_name"
-    cd $MODULES_SRC_DIR
+    cd $MODULES_PKG_DIR
     tar xjvf $pkg_name 
     cd $pkg_dir 
     ./configure --prefix=$MODULES_DIST_DIR && make && make install || exit 255
@@ -127,7 +128,7 @@ pkg_name="libunwind-0.99-beta.tar.gz"
 pkg_dir="libunwind-0.99-beta"
 if need_install "$pkg_name" "${osp_libs[*]}";then
     echo "----- prepare install -----  $pkg_name"
-    cd $MODULES_SRC_DIR
+    cd $MODULES_PKG_DIR
     tar xzvf $pkg_name 
     cd $pkg_dir 
     ./configure --prefix=$MODULES_DIST_DIR && make && make install || exit 255
@@ -139,7 +140,7 @@ pkg_name="gperftools-2.1.tar.gz"
 pkg_dir="gperftools-2.1"
 if need_install "$pkg_name" "${osp_libs[*]}";then
     echo "----- prepare install -----  $pkg_name"
-    cd $MODULES_SRC_DIR
+    cd $MODULES_PKG_DIR
     tar xzvf $pkg_name 
     cd $pkg_dir 
     ./configure --prefix=$MODULES_DIST_DIR LDFLAGS="-L$MODULES_DIST_DIR/lib" --enable-frame-pointers && make && make install || exit 255
@@ -151,7 +152,7 @@ pkg_name="bison-3.0.tar.gz"
 pkg_dir="bison-3.0"
 if need_install "$pkg_name" "${osp_libs[*]}";then
     echo "----- prepare install -----  $pkg_name"
-    cd $MODULES_SRC_DIR
+    cd $MODULES_PKG_DIR
     tar zxvf $pkg_name 
     cd $pkg_dir 
     ./configure --prefix=$MODULES_DIST_DIR && make && make install || exit 255
@@ -163,7 +164,7 @@ pkg_name="boost_1_54_0.tar.gz"
 pkg_dir="boost_1_54_0"
 if need_install "$pkg_name" "${osp_libs[*]}";then
     echo "----- prepare install -----  $pkg_name"
-    cd $MODULES_SRC_DIR
+    cd $MODULES_PKG_DIR
     tar zxvf $pkg_name 
     cd $pkg_dir 
     ./bootstrap.sh && ./b2 install --prefix=$MODULES_DIST_DIR || exit 255
@@ -175,7 +176,7 @@ pkg_name="openssl-1.0.2.tar.gz"
 pkg_dir="openssl-1.0.2"
 if need_install "$pkg_name" "${osp_libs[*]}";then
     echo "----- prepare install -----  $pkg_name"
-    cd $MODULES_SRC_DIR
+    cd $MODULES_PKG_DIR
     tar zxvf $pkg_name 
     cd $pkg_dir 
     ./config --prefix=$MODULES_DIST_DIR --libdir=lib shared && make -j1 && make install || exit 255
@@ -187,7 +188,7 @@ pkg_name="thrift-0.9.2.tar.gz"
 pkg_dir="thrift-0.9.2"
 if need_install "$pkg_name" "${osp_libs[*]}";then
     echo "----- prepare install -----  $pkg_name"
-    cd $MODULES_SRC_DIR
+    cd $MODULES_PKG_DIR
     export PATH=$MODULES_DIST_DIR/bin:$PATH
     tar zxvf $pkg_name 
     cd $pkg_dir 
@@ -199,7 +200,7 @@ fi
 pkg_name="pcre-8.37.tar.gz"
 pkg_dir="pcre-8.37"
 if need_install "$pkg_name" "${osp_libs[*]}";then
-    cd $MODULES_SRC_DIR
+    cd $MODULES_PKG_DIR
     tar zxvf $pkg_name
     cd $pkg_dir
     ./configure --prefix=$MODULES_DIST_DIR && make && make install || exit 255
@@ -210,7 +211,7 @@ fi
 pkg_name="libmemcache_mozilla_u3.tar.gz"
 pkg_dir="libmemcache"
 if need_install "$pkg_name" "${osp_libs[*]}";then
-    cd $MODULES_SRC_DIR
+    cd $MODULES_PKG_DIR
     tar zxvf $pkg_name
     cd $pkg_dir 
     ./configure --prefix=$MODULES_DIST_DIR && make && make install || exit 255
@@ -221,7 +222,7 @@ fi
 pkg_name="memcached-1.4.25.tar.gz"
 pkg_dir="memcached-1.4.25"
 if need_install "$pkg_name" "${osp_libs[*]}";then
-    cd $MODULES_SRC_DIR
+    cd $MODULES_PKG_DIR
     tar xvf $pkg_name
     cd $pkg_dir
     ./configure --prefix=$MODULES_DIST_DIR && make && make install || exit 255
@@ -232,44 +233,44 @@ fi
 pkg_name="apr-1.5.2.tar.gz"
 pkg_dir="apr-1.5.2"
 if need_install "$pkg_name" "${osp_libs[*]}";then
-    cd $MODULES_SRC_DIR
+    cd $MODULES_PKG_DIR
     tar zxvf $pkg_name
     cd $pkg_dir
     ./configure --prefix=$MODULES_DIST_DIR && make && make install || exit 255
-    cd $MODULES_SRC_DIR && rm -rf $pkg_dir
+    cd $MODULES_PKG_DIR && rm -rf $pkg_dir
 fi
 
 # pkg - 14
 pkg_name="apr-util-1.5.4.tar.gz"
 pkg_dir="apr-util-1.5.4"
 if need_install "$pkg_name" "${osp_libs[*]}";then
-    cd $MODULES_SRC_DIR
+    cd $MODULES_PKG_DIR
     tar zxvf $pkg_name
     cd $pkg_dir
     ./configure --prefix=$MODULES_DIST_DIR --with-apr=$MODULES_DIST_DIR && make && make install || exit 255
-    cd $MODULES_SRC_DIR && rm -rf $pkg_dir
+    cd $MODULES_PKG_DIR && rm -rf $pkg_dir
 fi
 
 # pkg - 15
 pkg_name="httpd-2.4.18.tar.gz"
 pkg_dir="httpd-2.4.18"
 if need_install "$pkg_name" "${osp_libs[*]}";then
-    cd $MODULES_SRC_DIR
+    cd $MODULES_PKG_DIR
     tar zxvf $pkg_name
     cd $pkg_dir
     ./configure --prefix=$MODULES_DIST_DIR --with-apr=$MODULES_DIST_DIR --with-apr-util=$MODULES_DIST_DIR --with-pcre=$MODULES_DIST_DIR && make && make install || exit 255
-    #cd $MODULES_SRC_DIR && rm -rf $pkg_dir
+    #cd $MODULES_PKG_DIR && rm -rf $pkg_dir
 fi
 
 # pkg - 16 
 pkg_name="zookeeper-3.4.8.tar.gz"
 pkg_dir="zookeeper-3.4.8/src/c"
 if need_install "$pkg_name" "${osp_libs[*]}";then
-    cd $MODULES_SRC_DIR
+    cd $MODULES_PKG_DIR
     tar zxvf $pkg_name
     cd $pkg_dir
     ./configure --prefix=$MODULES_DIST_DIR && make && make install || exit 255
-    #cd $MODULES_SRC_DIR && rm -rf $pkg_dir
+    #cd $MODULES_PKG_DIR && rm -rf $pkg_dir
 fi
 
 
