@@ -3,7 +3,7 @@
 
 WORK_DIR=$(pwd)
 TOP_DIR=$WORK_DIR
-#°²×°µ½buildÄ¿Â¼ÏÂ
+#å®‰è£…åˆ°buildç›®å½•ä¸‹
 BUILD_DIR=build
 ABSOLUTE_BUILD_DIR=$TOP_DIR/$BUILD_DIR
 
@@ -35,7 +35,6 @@ osp_libs[index++]="zookeeper-3.4.8.tar.gz"
 #osp_libs[index++]="thrift-0.9.2.tar.gz"
 #osp_libs[index++]="pcre-8.37.tar.gz"
 #osp_libs[index++]="memcached-1.4.25.tar.gz"
-#osp_libs[index++]="libmemcache_mozilla_u3.tar.gz"
 #osp_libs[index++]="apr-1.5.2.tar.gz"
 #osp_libs[index++]="apr-util-1.5.4.tar.gz"
 #osp_libs[index++]="httpd-2.4.18.tar.gz"
@@ -206,16 +205,6 @@ if need_install "$pkg_name" "${osp_libs[*]}";then
     cd .. && rm -rf $pkg_dir
 fi
 
-# pkg - 11
-pkg_name="libmemcache_mozilla_u3.tar.gz"
-pkg_dir="libmemcache"
-if need_install "$pkg_name" "${osp_libs[*]}";then
-    cd $MODULES_SRC_DIR
-    tar zxvf $pkg_name
-    cd $pkg_dir 
-    ./configure --prefix=$MODULES_DIST_DIR && make && make install || exit 255
-    cd .. && rm -rf $pkg_dir
-fi
 
 # pkg - 12
 pkg_name="memcached-1.4.25.tar.gz"
@@ -274,7 +263,7 @@ fi
 
 
 
-# ******** Éú³É demo ********
+# ******** ç”Ÿæˆ demo ********
 pkg_name="demo_cpp_thrift"
 if need_install "$pkg_name" "${osp_libs[*]}";then
     echo "----- prepare install -----  $pkg_name"
@@ -282,14 +271,14 @@ if need_install "$pkg_name" "${osp_libs[*]}";then
     ./build.sh
 fi
 
-# ******** Éú³ÉversionÐÅÏ¢ ********
+# ******** ç”Ÿæˆversionä¿¡æ¯ ********
 cd $ABSOLUTE_DIST_DIR
 echo "$VERSION" > version
 echo "build date:" >> version
 echo `date` >> version
 cat version
 
-# ************* ´ò°ü **************
+# ************* æ‰“åŒ… **************
 #cd $ABSOLUTE_BUILD_DIR
 #echo `pwd`
 #tar -czvf $PKG_NAME $DIST_DIR
