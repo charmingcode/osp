@@ -1,0 +1,17 @@
+
+# Treat all warnings as errors, except for sign compare.
+build --copt=-Werror
+build --copt=-Wno-sign-compare
+
+# build protobuf3 compatible with protobuf2
+build --cxxopt=-Dprotobuf=protobuf3
+
+# enable c++17
+build --cxxopt=-std=c++17
+build --host_cxxopt=-std=c++17
+
+
+# Some third-party libraries need standalone mode to work.
+# for example : glog 
+build --spawn_strategy=standalone
+build --genrule_strategy=standalone

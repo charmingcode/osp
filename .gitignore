@@ -1,0 +1,9 @@
+bazel-*
+
+# IDE cruft
+.clwb/
+.idea/
+*.iml
+
+# vscode 
+.vscode/
