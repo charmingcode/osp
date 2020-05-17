@@ -1,3 +1,7 @@
+#Note:
+# cd osp/docker && docker build -t osp:test .
+# docker run -it --rm -h debug     -v $HOME/work/ant/osp/osp:/v -v $HOME/.cache:/root/.cache -w /v/osp   osp:test
+
 FROM centos:latest
 
 #RUN yum install -y yum-plugin-ovl
