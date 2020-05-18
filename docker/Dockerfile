@@ -7,7 +7,7 @@ FROM centos:latest
 #RUN yum install -y yum-plugin-ovl
 
 # Install system tools
-RUN yum install -y which
+RUN yum install -y which vim
 
 # Install gcc
 RUN yum install -y glibc glibc-devel
@@ -25,5 +25,9 @@ RUN yum install -y -b git automake libtool make.x86_64 cmake.x86_64 patch
 
 # Install bazel
 RUN curl https://copr.fedorainfracloud.org/coprs/vbatts/bazel/repo/epel-7/vbatts-bazel-epel-7.repo -o /etc/yum.repos.d/CentOS-Bazek.repo && yum install -y bazel3
+
+# Config bashrc/bash_profile
+RUN "alias ls='ls --color=auto'" >> /root/.bashrc
+RUN "alias vi='vim'" >> /root/.bashrc
 
 ENTRYPOINT [ "/bin/bash" ]
