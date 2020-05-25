@@ -16,8 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  * 
- *  Created on: April 4, 2020
- *  Reference from https://github.com/apache/kudu/blob/master/src/kudu/util/logging.h
+   Created on: April 4, 2020
+   Reference from https://github.com/apache/kudu/blob/master/src/kudu/util/logging.h
  */
 
 
@@ -30,11 +30,13 @@
 
 namespace osp {
 
-// glog doesn't allow multiple invocations of InitGoogleLogging. This method conditionally
+// The glog doesn't allow multiple invocations of InitGoogleLogging. This method conditionally
 // calls InitGoogleLogging only if it hasn't been called before.
 //
 // It also takes care of installing the google failure signal handler and
 // setting the signal handler for SIGPIPE to SIG_IGN.
+
+// NOTE: thread safe
 void InitGoogleLoggingSafe(const char* arg);
 
 // Shuts down the google logging library. Call before exit to ensure that log files are

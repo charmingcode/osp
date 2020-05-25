@@ -1,10 +1,19 @@
-workspace(name = "com_charming_osp")
+workspace(name = "com_github_osp")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
+# GoogleTest/GoogleMock framework.
+http_archive(
+    name = "com_google_googletest",
+    sha256 = "54a139559cc46a68cf79e55d5c22dc9d48e647a66827342520ce0441402430fe",
+    strip_prefix = "googletest-1.10.x",
+    # Lastest snapshot at 2019-10-03
+    urls = [
+        "https://github.com/google/googletest/archive/v1.10.x.zip",
+    ],
+)
 
 # Google logging and flags library.
- 
 http_archive(
     name = "com_github_gflags_gflags",
     strip_prefix = "gflags-2.2.2",

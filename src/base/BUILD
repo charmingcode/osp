@@ -15,4 +15,22 @@ cc_library(
     ],
 )
 
+cc_library(
+    name = "base",
+    srcs = [],
+    hdrs = ["spin_lock.h"],
+    deps = [
+        "@com_google_absl//absl/base",
+    ],
+)
+
+cc_test(
+    name = "logging_test",
+    srcs = ["logging_test.cc"],
+    deps = [
+      ":logging",
+      "@com_google_googletest//:gtest",
+    ],
+)
+
 

@@ -21,6 +21,7 @@
  */
 
 #include "src/base/logging.h"
+#include "src/base/spin_lock.h"
 
 #include "absl/time/time.h"
 #include "absl/time/clock.h"
@@ -50,8 +51,10 @@ DEFINE_int32(max_log_files, 10,
 
 namespace osp {
 
+SpinLock logging_lock;
+
 void InitGoogleLoggingSafe(const char* arg) {
-//   SpinLockHolder l(&logging_mutex);
+  std::lock_guard<SpinLock> l(logging_lock);
 
   static bool logging_initialized = false;
 
@@ -81,9 +84,6 @@ void InitGoogleLoggingSafe(const char* arg) {
       std::ostringstream error_msg;
       error_msg << "Could not open file in log_dir " << FLAGS_log_dir;
       perror(error_msg.str().c_str());
-      // TODO: add lock
-      // Unlock the mutex before exiting the program to avoid mutex d'tor assert.
-      // logging_mutex.Unlock();
       exit(1);
     }
     remove(file_name.c_str());
