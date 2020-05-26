@@ -33,6 +33,7 @@ namespace osp {
 //   VLOG(1) << Substitute("your foo is $0", compute_costly_bar_string());
 //
 // in hot code paths.
+// NOTE: verbose level define in glog. DECLARE_int32(v);  // in vlog_is_on.cc
 TEST(LoggingTest, TestVlogDoesNotEvaluateMessage) {
   if (VLOG_IS_ON(1)) {
     LOG(INFO) << "Test skipped: verbose level is at least 1";
