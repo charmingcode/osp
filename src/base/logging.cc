@@ -15,28 +15,29 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- * 
+ *
  *  Created on: April 4, 2020
- *  Reference from https://github.com/apache/kudu/blob/master/src/kudu/util/logging.cc
+ *  Reference from
+ https://github.com/apache/kudu/blob/master/src/kudu/util/logging.cc
  */
 
 #include "src/base/logging.h"
 #include "src/base/spin_lock.h"
 
-#include "absl/time/time.h"
-#include "absl/time/clock.h"
-#include "absl/strings/str_cat.h"
 #include <fstream>
-#include <string>
 #include <mutex>
+#include <string>
+#include "absl/strings/str_cat.h"
+#include "absl/time/clock.h"
+#include "absl/time/time.h"
 
 #include "gflags/gflags.h"
 
 const char* PROJ_NAME = "osp";
 
 DEFINE_string(log_filename, "",
-    "Prefix of log filename - "
-    "full path is <log_dir>/<log_filename>.[INFO|WARN|ERROR|FATAL]");
+              "Prefix of log filename - "
+              "full path is <log_dir>/<log_filename>.[INFO|WARN|ERROR|FATAL]");
 
 DEFINE_bool(log_async, true,
             "Enable asynchronous writing to log files. This improves "
@@ -46,7 +47,8 @@ DEFINE_int32(log_async_buffer_bytes_per_level, 2 * 1024 * 1024,
              "The number of bytes of buffer space used by each log "
              "level. Only relevant when --log_async is enabled.");
 
-DEFINE_int32(max_log_files, 10,
+DEFINE_int32(
+    max_log_files, 10,
     "Maximum number of log files to retain per severity level. The most recent "
     "log files are retained. If set to 0, all log files are retained.");
 
@@ -73,13 +75,15 @@ void InitGoogleLoggingSafe(const char* arg) {
   // temporary directory if none is specified. This is done so that we
   // can reliably construct the log file name without duplicating the
   // complex logic that glog uses to guess at a temporary dir.
-  CHECK_NE("", google::SetCommandLineOptionWithMode("log_dir",
-     "/tmp", google::FlagSettingMode::SET_FLAGS_DEFAULT));
+  CHECK_NE("",
+           google::SetCommandLineOptionWithMode(
+               "log_dir", "/tmp", google::FlagSettingMode::SET_FLAGS_DEFAULT));
 
-  if (!FLAGS_logtostderr) {  
+  if (!FLAGS_logtostderr) {
     // Verify that a log file can be created in log_dir by creating a tmp file.
-    const std::string file_name = absl::StrCat(FLAGS_log_dir, "/", PROJ_NAME,
-                              "_test_log.", absl::FormatTime(absl::Now()));
+    const std::string file_name =
+        absl::StrCat(FLAGS_log_dir, "/", PROJ_NAME, "_test_log.",
+                     absl::FormatTime(absl::Now()));
     std::ofstream test_file(file_name.c_str());
     if (!test_file.is_open()) {
       std::ostringstream error_msg;
@@ -108,11 +112,11 @@ void InitGoogleLoggingSafe(const char* arg) {
   // sockets do not crash when writing to a closed socket. See KUDU-1910.
   // IgnoreSigPipe();
 
-  // TODO: support minidump  
+  // TODO: support minidump
   // For minidump support. Must be called before logging threads started.
   // CHECK_OK(BlockSigUSR1());
 
-  //TODO: support log async  
+  // TODO: support log async
   //   if (FLAGS_log_async) {
   //     EnableAsyncLogging();
   //   }
@@ -120,8 +124,4 @@ void InitGoogleLoggingSafe(const char* arg) {
   logging_initialized = true;
 }
 
-}
-
-
-
-
+}  // namespace osp

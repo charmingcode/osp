@@ -15,10 +15,11 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- * 
- 
+ *
+
    Created on: April 4, 2020
-   Reference from https://github.com/facebook/rocksdb/blob/master/util/mutexlock.h
+   Reference from
+ https://github.com/facebook/rocksdb/blob/master/util/mutexlock.h
 
  */
 
@@ -75,4 +76,4 @@ class ABSL_LOCKABLE SpinLock {
   absl::base_internal::SpinLock lock_;
 };
 
-} // namespace osp
+}  // namespace osp

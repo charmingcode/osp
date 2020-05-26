@@ -15,10 +15,11 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- * 
- 
+ *
+
    Created on: April 4, 2020
-   Reference from https://github.com/apache/kudu/blob/master/src/kudu/util/logging-test.cc
+   Reference from
+ https://github.com/apache/kudu/blob/master/src/kudu/util/logging-test.cc
 
  */
 
@@ -45,4 +46,4 @@ TEST(LoggingTest, TestVlogDoesNotEvaluateMessage) {
   ASSERT_EQ(0, numVlogs);
 }
 
-} // namespace osp
+}  // namespace osp
