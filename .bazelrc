@@ -1,3 +1,5 @@
+# Make the bazel test output on console
+test --test_output=all --action_env="GTEST_COLOR=1"
 
 # Treat all warnings as errors, except for sign compare.
 build --copt=-Werror

@@ -28,6 +28,7 @@
 #include "absl/strings/str_cat.h"
 #include <fstream>
 #include <string>
+#include <mutex>
 
 #include "gflags/gflags.h"
 

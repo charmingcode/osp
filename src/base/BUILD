@@ -9,6 +9,7 @@ cc_library(
     srcs = ["logging.cc"],
     hdrs = ["logging.h"],
     deps = [
+        ":base",
         "@com_google_absl//absl/strings",
         "@com_google_glog//:glog",
         "@com_google_absl//absl/time",
@@ -29,6 +30,7 @@ cc_test(
     srcs = ["logging_test.cc"],
     deps = [
       ":logging",
+      "//src/base/test:test_main",
       "@com_google_googletest//:gtest",
     ],
 )
