@@ -16,13 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  *
- *  Created on: April 4, 2020
- *  Reference from
- https://github.com/apache/kudu/blob/master/src/kudu/util/logging.cc
+   Created on: April 4, 2020
+   Reference from
+   https://github.com/apache/kudu/blob/master/src/kudu/util/logging.cc
  */
 
 #include "src/base/logging.h"
 #include "src/base/spin_lock.h"
+#include "src/base/logger_async.h"
 
 #include <fstream>
 #include <mutex>
@@ -30,7 +31,6 @@
 #include "absl/strings/str_cat.h"
 #include "absl/time/clock.h"
 #include "absl/time/time.h"
-
 #include "gflags/gflags.h"
 
 const char* PROJ_NAME = "osp";
@@ -53,6 +53,20 @@ DEFINE_int32(
     "log files are retained. If set to 0, all log files are retained.");
 
 namespace osp {
+namespace {
+
+void EnableAsyncLogging() {
+  // Enable Async for every level except for FATAL. Fatal should be synchronous
+  // to ensure that we get the fatal log message written before exiting.
+  for (auto level : { google::INFO, google::WARNING, google::ERROR }) {
+    auto* orig = google::base::GetLogger(level);
+    auto* async = new AsyncLogger(orig, FLAGS_log_async_buffer_bytes_per_level);
+    async->Start();
+    google::base::SetLogger(level, async);
+  }
+}
+
+} // anonymous namespace
 
 SpinLock logging_lock;
 
@@ -116,10 +130,9 @@ void InitGoogleLoggingSafe(const char* arg) {
   // For minidump support. Must be called before logging threads started.
   // CHECK_OK(BlockSigUSR1());
 
-  // TODO: support log async
-  //   if (FLAGS_log_async) {
-  //     EnableAsyncLogging();
-  //   }
+  if (FLAGS_log_async) {
+    EnableAsyncLogging();
+  }
 
   logging_initialized = true;
 }

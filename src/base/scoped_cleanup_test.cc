@@ -16,29 +16,47 @@
  * specific language governing permissions and limitations
  * under the License.
  *
-   Created on: April 4, 2020
+   Created on: May 28, 2020
    Reference from
-   https://github.com/apache/kudu/blob/master/src/kudu/util/logging.h
+   https://github.com/apache/kudu/blob/master/src/kudu/util/scoped_cleanup-test.cc
  */
 
-#pragma once
+#include <gtest/gtest.h>
 
-#include <iosfwd>
-#include <string>
-
-#include "glog/logging.h"
+#include "src/base/scoped_cleanup.h"
 
 namespace osp {
 
-// The glog doesn't allow multiple invocations of InitGoogleLogging. This method
-// conditionally calls InitGoogleLogging only if it hasn't been called before.
-// It also takes care of installing the google failure signal handler and
-// setting the signal handler for SIGPIPE to SIG_IGN.
-// NOTE: thread safe
-void InitGoogleLoggingSafe(const char* arg);
+TEST(ScopedCleanup, TestCleanup) {
+  int var = 0;
+  {
+    auto saved = var;
+    auto cleanup = MakeScopedCleanup([&] () { var = saved; });
+    var = 42;
+  }
+  ASSERT_EQ(0, var);
+}
 
-// Shuts down the google logging library. Call before exit to ensure that log
-// files are flushed.
-void ShutdownLoggingSafe();
+TEST(ScopedCleanup, TestCleanupMacro) {
+  int var = 0;
+  {
+    auto saved = var;
+    SCOPED_CLEANUP({ var = saved; });
+    var = 42;
+  }
+  ASSERT_EQ(0, var);
+}
 
-}  // namespace osp
+
+TEST(ScopedCleanup, TestCancelCleanup) {
+  int var = 0;
+  {
+    auto saved = var;
+    auto cleanup = MakeScopedCleanup([&] () { var = saved; });
+    var = 42;
+    cleanup.cancel();
+  }
+  ASSERT_EQ(42, var);
+}
+
+} // namespace osp
