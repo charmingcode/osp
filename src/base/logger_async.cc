@@ -23,18 +23,17 @@
 
 #include "src/base/logger_async.h"
 
+#include <mutex>
 #include <string>
 #include <thread>
-#include <mutex>
 
 namespace osp {
 
-AsyncLogger::AsyncLogger(google::base::Logger* wrapped,
-                         int max_buffer_bytes) :
-    max_buffer_bytes_(max_buffer_bytes),
-    wrapped_(DCHECK_NOTNULL(wrapped)),
-    active_buf_(new Buffer()),
-    flushing_buf_(new Buffer()) {
+AsyncLogger::AsyncLogger(google::base::Logger* wrapped, int max_buffer_bytes)
+    : max_buffer_bytes_(max_buffer_bytes),
+      wrapped_(DCHECK_NOTNULL(wrapped)),
+      active_buf_(new Buffer()),
+      flushing_buf_(new Buffer()) {
   DCHECK_GT(max_buffer_bytes_, 0);
 }
 
@@ -58,9 +57,7 @@ void AsyncLogger::Stop() {
   CHECK(flushing_buf_->messages.empty());
 }
 
-void AsyncLogger::Write(bool force_flush,
-                        time_t timestamp,
-                        const char* message,
+void AsyncLogger::Write(bool force_flush, time_t timestamp, const char* message,
                         int message_len) {
   {
     absl::MutexLock l(&lock_);
@@ -74,18 +71,20 @@ void AsyncLogger::Write(bool force_flush,
     wake_flusher_cond_.Signal();
   }
 
-  // In most cases, we take the 'force_flush' argument to mean that we'll let the logger
-  // thread do the flushing for us, but not block the application. However, for the
-  // special case of a FATAL log message, we really want to make sure that our message
-  // hits the log before we continue, or else it's likely that the application will exit
-  // while it's still in our buffer.
+  // In most cases, we take the 'force_flush' argument to mean that we'll let
+  // the logger thread do the flushing for us, but not block the application.
+  // However, for the special case of a FATAL log message, we really want to
+  // make sure that our message hits the log before we continue, or else it's
+  // likely that the application will exit while it's still in our buffer.
   //
-  // NOTE: even if the application doesn't wrap the FATAL-level logger, log messages at
-  // FATAL are also written to all other log files with lower levels. So, a FATAL message
-  // will force a synchronous flush of all lower-level logs before exiting.
+  // NOTE: even if the application doesn't wrap the FATAL-level logger, log
+  // messages at FATAL are also written to all other log files with lower
+  // levels. So, a FATAL message will force a synchronous flush of all
+  // lower-level logs before exiting.
   //
-  // Unfortunately, the underlying log level isn't passed through to this interface, so we
-  // have to use this hack: messages from FATAL errors start with the character 'F'.
+  // Unfortunately, the underlying log level isn't passed through to this
+  // interface, so we have to use this hack: messages from FATAL errors start
+  // with the character 'F'.
   if (message_len > 0 && message[0] == 'F') {
     Flush();
   }
@@ -98,17 +97,14 @@ void AsyncLogger::Flush() {
   // Wake up the writer thread at least twice.
   // This ensures that it has completely flushed both buffers.
   uint64_t orig_flush_count = flush_count_;
-  while (flush_count_ < orig_flush_count + 2 &&
-         state_ == RUNNING) {
+  while (flush_count_ < orig_flush_count + 2 && state_ == RUNNING) {
     active_buf_->flush = true;
     wake_flusher_cond_.Signal();
     flush_complete_cond_.Wait(&lock_);
   }
 }
 
-uint32_t AsyncLogger::LogSize() {
-  return wrapped_->LogSize();
-}
+uint32_t AsyncLogger::LogSize() { return wrapped_->LogSize(); }
 
 void AsyncLogger::RunThread() {
   // Protects buffers as well as 'state_'.
@@ -117,7 +113,8 @@ void AsyncLogger::RunThread() {
     while (!active_buf_->needs_flush_or_write() && state_ == RUNNING) {
       if (wake_flusher_cond_.WaitWithTimeout(
               &lock_, absl::Milliseconds(FLAGS_logbufsecs))) {
-        // In case of wait timeout, force it to flush regardless whether there is anything enqueued.
+        // In case of wait timeout, force it to flush regardless whether there
+        // is anything enqueued.
         active_buf_->flush = true;
       }
     }
@@ -151,4 +148,4 @@ bool AsyncLogger::BufferFull(const Buffer& buf) const {
   return buf.size > (max_buffer_bytes_ / 2);
 }
 
-} // namespace kudu
+}  // namespace osp
