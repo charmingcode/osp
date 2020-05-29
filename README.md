@@ -14,6 +14,9 @@
 
 ## glog
 
+1. 参考kudu 实现双buffer的async_log，基于size和timeout触发flush
+
+
 ## gtest
 
 ## grpc
