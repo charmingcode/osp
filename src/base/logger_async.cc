@@ -27,9 +27,6 @@
 #include <thread>
 #include <mutex>
 
-
-using std::string;
-
 namespace osp {
 
 AsyncLogger::AsyncLogger(google::base::Logger* wrapped,
@@ -72,7 +69,7 @@ void AsyncLogger::Write(bool force_flush,
       app_threads_blocked_count_for_tests_++;
       free_buffer_cond_.Wait(&lock_);
     }
-    active_buf_->add(Msg(timestamp, string(message, message_len)),
+    active_buf_->add(Msg(timestamp, std::string(message, message_len)),
                      force_flush);
     wake_flusher_cond_.Signal();
   }
@@ -118,7 +115,7 @@ void AsyncLogger::RunThread() {
   lock_.Lock();
   while (state_ == RUNNING || active_buf_->needs_flush_or_write()) {
     while (!active_buf_->needs_flush_or_write() && state_ == RUNNING) {
-      if (!wake_flusher_cond_.WaitWithTimeout(
+      if (wake_flusher_cond_.WaitWithTimeout(
               &lock_, absl::Milliseconds(FLAGS_logbufsecs))) {
         // In case of wait timeout, force it to flush regardless whether there is anything enqueued.
         active_buf_->flush = true;
