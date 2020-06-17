@@ -10,6 +10,21 @@
 
 ## bazel
 
+1. 全量符号表链接
+
+```
+cc_binary(
+    name = "libxxxx.so",
+    srcs = ["xxx.cc"],
+    linkshared = True,
+    linkstatic = True,  
+    deps = [
+      
+    ],
+)
+```
+
+
 ## gflag
 
 ## glog
