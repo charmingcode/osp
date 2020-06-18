@@ -19,12 +19,13 @@
    Created on: Jun 17, 2020
  */
 
+#include <gtest/gtest.h>
 #include <map>
 #include <vector>
-#include <gtest/gtest.h>
 
 /*
-给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。
+给定一个整数数组 nums 和一个目标值
+target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。
 
 你可以假设每种输入只会对应一个答案。但是，数组中同一个元素不能使用两遍。
 
@@ -42,26 +43,26 @@
 */
 
 class Solution {
-public:
-    std::vector<int> TwoSum(std::vector<int>& nums, int target) {
-        // key = the needed paired value, value = the paired value pos.
-        std::map<int, int> to_pair;
-        for (int i = 0; i < nums.size(); ++i) {
-            if (to_pair.count(nums[i]) > 0) {
-                return {to_pair[nums[i]], i};
-            } else {
-                to_pair[ target - nums[i] ] = i;
-            }
-        }
-        return {};
+ public:
+  std::vector<int> TwoSum(std::vector<int>& nums, int target) {
+    // key = the needed paired value, value = the paired value pos.
+    std::map<int, int> to_pair;
+    for (int i = 0; i < nums.size(); ++i) {
+      if (to_pair.count(nums[i]) > 0) {
+        return {to_pair[nums[i]], i};
+      } else {
+        to_pair[target - nums[i]] = i;
+      }
     }
+    return {};
+  }
 };
 
 TEST(Solution, TwoSum) {
-    Solution solution;
-    std::vector<int> nums = {1,2,3};
-    std::vector<int> expected_nums = {};
-    EXPECT_EQ(solution.TwoSum(nums, 10), expected_nums);
-    expected_nums = {0 ,1};
-    EXPECT_EQ(solution.TwoSum(nums, 3), expected_nums);
+  Solution solution;
+  std::vector<int> nums = {1, 2, 3};
+  std::vector<int> expected_nums = {};
+  EXPECT_EQ(solution.TwoSum(nums, 10), expected_nums);
+  expected_nums = {0, 1};
+  EXPECT_EQ(solution.TwoSum(nums, 3), expected_nums);
 }

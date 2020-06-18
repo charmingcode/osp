@@ -19,14 +19,17 @@
    Created on: Jun 17, 2020
  */
 
+#include <gtest/gtest.h>
 #include <map>
 #include <vector>
-#include <gtest/gtest.h>
 
 /*
-You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.
+You are given two non-empty linked lists representing two non-negative integers.
+The digits are stored in reverse order and each of their nodes contain a single
+digit. Add the two numbers and return it as a linked list.
 
-You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+You may assume the two numbers do not contain any leading zero, except the
+number 0 itself.
 
 Example:
 
@@ -49,89 +52,88 @@ Explanation: 342 + 465 = 807.
  */
 
 struct ListNode {
-    int val;
-    ListNode *next;
-    ListNode(int x) : val(x), next(NULL) {}
+  int val;
+  ListNode* next;
+  ListNode(int x) : val(x), next(NULL) {}
 };
 
 class TestHelp {
-public:
-    // create the list by the input 'nums'
-    static ListNode* GenList(std::vector<int> nums) {
-        ListNode* result = nullptr;
-        ListNode* ret = nullptr;
-        for(size_t i = 0; i < nums.size(); i++) {
-            if(!result) {
-              result = new ListNode(nums[i]);
-              ret = result;
-            } else {
-              result->next = new ListNode(nums[i]);
-              result = result->next;
-            }
-        }
-        return ret;
+ public:
+  // create the list by the input 'nums'
+  static ListNode* GenList(std::vector<int> nums) {
+    ListNode* result = nullptr;
+    ListNode* ret = nullptr;
+    for (size_t i = 0; i < nums.size(); i++) {
+      if (!result) {
+        result = new ListNode(nums[i]);
+        ret = result;
+      } else {
+        result->next = new ListNode(nums[i]);
+        result = result->next;
+      }
     }
+    return ret;
+  }
 
-    static std::vector<int> Convert(ListNode* list) {
-        std::vector<int> result;
-        while(list != nullptr) {
-            result.push_back(list->val);
-            list = list->next;
-        }
-        return result;
+  static std::vector<int> Convert(ListNode* list) {
+    std::vector<int> result;
+    while (list != nullptr) {
+      result.push_back(list->val);
+      list = list->next;
     }
+    return result;
+  }
 };
 
 class Solution {
-public:
-    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        ListNode* result = nullptr;
-        ListNode* ret = nullptr;
-        int add_flag = 0;
-        while (l1 != nullptr || l2 != nullptr || add_flag == 1)
-        {
-            if(!result) {
-              result = new ListNode(0);
-              ret = result;
-            } else {
-              result->next = new ListNode(0);
-              result = result->next;
-            }
-                
-            if(l1) {
-                result->val += l1->val;
-                l1 = l1->next;
-            }
+ public:
+  ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+    ListNode* result = nullptr;
+    ListNode* ret = nullptr;
+    int add_flag = 0;
+    while (l1 != nullptr || l2 != nullptr || add_flag == 1) {
+      if (!result) {
+        result = new ListNode(0);
+        ret = result;
+      } else {
+        result->next = new ListNode(0);
+        result = result->next;
+      }
 
-            if(l2) {
-                result->val += l2->val;
-                l2 = l2->next;
-            }
+      if (l1) {
+        result->val += l1->val;
+        l1 = l1->next;
+      }
 
-            if(add_flag) {
-                result->val +=1;
-                add_flag = 0;
-            }
+      if (l2) {
+        result->val += l2->val;
+        l2 = l2->next;
+      }
 
-            if(result->val/10 > 0) {
-                result->val = result->val%10;
-                add_flag =1;
-            }
-        }
+      if (add_flag) {
+        result->val += 1;
+        add_flag = 0;
+      }
 
-        return ret;
+      if (result->val / 10 > 0) {
+        result->val = result->val % 10;
+        add_flag = 1;
+      }
     }
+
+    return ret;
+  }
 };
 
 TEST(Solution, basic) {
-    Solution solution;
-    ListNode* l1 = TestHelp::GenList({1, 2, 3});
-    ListNode* l2 = TestHelp::GenList({1, 2, 3});
-    std::vector<int> expected_result = {2, 4, 6};
-    EXPECT_EQ(TestHelp::Convert(solution.addTwoNumbers(l1, l2)), expected_result);
+  Solution solution;
+  ListNode* l1 = TestHelp::GenList({1, 2, 3});
+  ListNode* l2 = TestHelp::GenList({1, 2, 3});
+  std::vector<int> expected_result = {2, 4, 6};
+  EXPECT_EQ(TestHelp::Convert(solution.addTwoNumbers(l1, l2)), expected_result);
 
-    l1 = TestHelp::GenList({1, 2, 3});
-    l2 = TestHelp::GenList({3, 5});
-    expected_result = {4, 7, 3};
-    EXPECT_EQ(TestHelp::Convert(solution.addTwoNumbers(l1, l2)), expected_result);
+  l1 = TestHelp::GenList({1, 2, 3});
+  l2 = TestHelp::GenList({3, 5});
+  expected_result = {4, 7, 3};
+  EXPECT_EQ(TestHelp::Convert(solution.addTwoNumbers(l1, l2)), expected_result);
 }
