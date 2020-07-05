@@ -28,3 +28,12 @@ cc_test(
         "@com_google_glog//:glog",
     ]
 )
+
+cc_test(
+    name = "longest_palindromic_substring",
+    srcs = ["longest_palindromic_substring.cc"],
+    deps = [
+        "//src/base/test:test_main",
+        "@com_google_glog//:glog",
+    ]
+)
