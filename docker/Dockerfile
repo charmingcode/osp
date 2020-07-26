@@ -7,11 +7,14 @@ FROM centos:latest
 #RUN yum install -y yum-plugin-ovl
 
 # Install system tools
-RUN yum install -y which vim tree
+RUN yum install -y which vim tree wget
 
 # Install gcc
 RUN yum install -y glibc glibc-devel
 RUN yum install -y gcc gcc-c++ libstdc++-devel binutils gdb
+
+# Install pcre
+RUN yum install -y pcre pcre-devel
 
 # Install clang
 RUN yum install -y -b llvm clang compiler-rt
