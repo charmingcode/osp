@@ -7,7 +7,7 @@ FROM centos:latest
 #RUN yum install -y yum-plugin-ovl
 
 # Install system tools
-RUN yum install -y which vim tree wget
+RUN yum install -y which vim tree wget net-tools.x86_64
 
 # Install gcc
 RUN yum install -y glibc glibc-devel
