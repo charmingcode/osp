@@ -47,3 +47,22 @@ http_archive(
     ],
 )
 
+# Google grpc
+# update library version from https://packages.grpc.io/
+http_archive(
+    name = "com_github_grpc_grpc",
+    sha256 = "dc4c42a431ca97eed7f23528861d938244d7defd3a466f9d1a763bff9bdc1e1c",
+    strip_prefix = "grpc-bebd20b126303a1f5d6cbb31d0463460b59c5074",
+    urls = [
+        "https://github.com/grpc/grpc/archive/bebd20b126303a1f5d6cbb31d0463460b59c5074.tar.gz",
+    ],
+)
+
+# Required for dependency @com_github_grpc_grpc
+load("@com_github_grpc_grpc//bazel:grpc_deps.bzl", "grpc_deps")
+
+grpc_deps()
+
+load("@com_github_grpc_grpc//bazel:grpc_extra_deps.bzl", "grpc_extra_deps")
+
+grpc_extra_deps()
