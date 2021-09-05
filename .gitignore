@@ -1,5 +1,6 @@
 bazel-*
 token
+third_party/
 # IDE cruft
 .clwb/
 .idea/
