@@ -30,17 +30,16 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(googlelog)
 
+# gRPC
+FetchContent_Declare(
+    gRPC
+    GIT_REPOSITORY https://github.com/grpc/grpc
+    GIT_TAG        v1.39.1
+)
+set(BENCHMARK_ENABLE_TESTING OFF CACHE INTERNAL "")
+set(gRPC_BUILD_TESTS OFF CACHE INTERNAL "")
 
-# # gRPC
-# FetchContent_Declare(
-#     gRPC
-#     GIT_REPOSITORY https://github.com/grpc/grpc
-#     GIT_TAG        v1.28.1
-# )
-# set(BENCHMARK_ENABLE_TESTING OFF CACHE INTERNAL "")
-# set(gRPC_BUILD_TESTS OFF CACHE INTERNAL "")
-
-# FetchContent_MakeAvailable(gRPC)
+FetchContent_MakeAvailable(gRPC)
 
 # # After using add_subdirectory, we can now use the grpc targets directly from
 # # this build.

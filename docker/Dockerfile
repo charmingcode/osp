@@ -1,6 +1,6 @@
 #Note:
 # cd osp/docker && docker build -t osp:test .
-# docker run -it --rm -h debug     -v $HOME/work/ant/osp/osp:/v -v $HOME/.cache:/root/.cache -w /v/osp   osp:test
+# docker run -it --rm -h debug  --privileged  -v $HOME/work/ant/osp/osp:/v -v $HOME/.cache:/root/.cache -w /v/osp   osp:test
 
 #FROM centos:latest
 FROM centos:7
@@ -9,6 +9,9 @@ FROM centos:7
 
 # Install system tools
 RUN yum install -y which vim tree wget net-tools.x86_64
+
+# Install ssh
+RUN yum install -y openssh-server libaio libnsl
 
 # Install gcc
 RUN yum install -y glibc glibc-devel
@@ -39,4 +42,5 @@ RUN echo "alias ls='ls --color=auto'" >> /root/.bashrc
 RUN echo "alias vi='vim'" >> /root/.bashrc
 #RUN cd /usr/bin && ln -s python2 python && cd -
 
-ENTRYPOINT [ "/bin/bash" ]
+#ENTRYPOINT [ "/bin/bash" ]
+#ENTRYPOINT ["/bin/bash", "-l", "-c"]
